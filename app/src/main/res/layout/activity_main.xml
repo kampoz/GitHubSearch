@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  tools:context="com.example.kamil.githubsearch.MainActivity">
+  tools:context="com.example.kamil.githubsearch.activities.MainActivity">
 
   <LinearLayout
     android:layout_width="match_parent"
@@ -14,6 +14,7 @@
     android:background="@color/gray">
 
     <EditText
+      android:id="@+id/etInput"
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:layout_weight="1"
@@ -27,11 +28,18 @@
 
   </LinearLayout>
 
+  <TextView
+    android:id="@+id/tvResultsAmount"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Search results: 0"/>
+
   <android.support.v7.widget.RecyclerView
-    android:id="@+id/rv_main"
+    android:id="@+id/rvResults"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
+    android:background="@color/colorAccent"
     tools:layout_editor_absoluteX="8dp"
     tools:layout_editor_absoluteY="8dp"
     android:padding="@dimen/search_field_padding"/>

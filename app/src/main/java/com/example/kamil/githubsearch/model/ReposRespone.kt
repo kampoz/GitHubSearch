@@ -1,4 +1,4 @@
-package com.example.kamil.githubsearch
+package com.example.kamil.githubsearch.model
 
 
 /**
@@ -7,7 +7,7 @@ package com.example.kamil.githubsearch
 class ReposResponse {
     var incomplete_results: String? = null
 
-    var items: Array<Item>? = null
+    var items: MutableList<Repo>? = null
 
     var total_count: String? = null
 
