@@ -13,15 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.kamil.githubsearch.R
 import com.example.kamil.githubsearch.api.ApiManager
-import com.example.kamil.githubsearch.api.GitHubApi
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MainActivity : AppCompatActivity() {
@@ -55,15 +47,9 @@ class MainActivity : AppCompatActivity() {
 
         usersItems.clear()
         adapter.items.clear()
-        
+
         var apiManager = ApiManager()
-        apiManager.gitHubApi.getUsersByName("kampoz")
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { userResponse -> userResponse.items }
-                .flatMapIterable { user -> user }
-                .map { user -> user.login }
+        apiManager.userLoginObservable("kampoz")
                 .subscribe({
                     usersItems.add(it)
                 }, {

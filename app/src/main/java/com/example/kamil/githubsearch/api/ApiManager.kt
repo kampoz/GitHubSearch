@@ -1,6 +1,8 @@
 package com.example.kamil.githubsearch.api
 
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -31,9 +33,15 @@ class ApiManager {
                 .build()
     }
 
-//    fun userLoginObserver() : Observable<String>{
-//
-//    }
+    fun userLoginObservable(name : String) : Observable<String>{
+        return gitHubApi.getUsersByName(name)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map { userResponse -> userResponse.items }
+                .flatMapIterable { user -> user }
+                .map { user -> user.login }
+    }
 
     companion object {
         val BASE_URL = "https://api.github.com/search/"
