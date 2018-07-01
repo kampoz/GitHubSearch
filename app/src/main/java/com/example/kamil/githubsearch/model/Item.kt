@@ -8,5 +8,5 @@ import android.support.annotation.IntegerRes
 class Item {
     var id : String? = null
     var name : String? = null
-
+    var isUser : Boolean = false
 }

@@ -2,7 +2,7 @@ package com.example.kamil.githubsearch.api
 
 import com.example.kamil.githubsearch.model.Item
 import com.example.kamil.githubsearch.model.Repo
-import com.example.kamil.githubsearch.model.RepoUser
+import com.example.kamil.githubsearch.model.User
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -65,14 +65,16 @@ class ApiManager {
         val item = Item()
         item.id = repo.id
         item.name = repo.name
+        item.isUser = false;
         return item
 
     }
 
-    fun userToItem(user : RepoUser) : Item {
+    fun userToItem(user : User) : Item {
         val item = Item()
         item.id = user.id
         item.name = user.login
+        item.isUser = true
         return item
 
     }

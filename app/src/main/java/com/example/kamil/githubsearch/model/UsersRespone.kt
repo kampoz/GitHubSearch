@@ -7,7 +7,7 @@ package com.example.kamil.githubsearch.model
 class UsersResponse {
     var incomplete_results: String? = null
 
-    var items: MutableList<RepoUser>? = null
+    var items: MutableList<User>? = null
 
     var total_count: String? = null
 

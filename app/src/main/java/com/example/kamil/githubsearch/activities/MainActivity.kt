@@ -1,7 +1,6 @@
 package com.example.kamil.githubsearch.activities
 
 import android.os.Bundle
-import android.support.annotation.IntegerRes
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -16,7 +15,6 @@ import android.widget.TextView
 import com.example.kamil.githubsearch.R
 import com.example.kamil.githubsearch.api.ApiManager
 import com.example.kamil.githubsearch.model.Item
-import com.example.kamil.githubsearch.util.ItemsComparator
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -25,13 +23,15 @@ class MainActivity : AppCompatActivity() {
 
     val log: String = "ApiLog  Http"
     var adapter = ResultsAdapter();
-//    var allItems = mutableListOf<String?>()
+    //    var allItems = mutableListOf<String?>()
     var allItems = mutableSetOf<Item?>()
     var apiManager = ApiManager()
     val EMPTY = 0
     val SECOND = 1000L
     val TWO_SECONDS = 2000L
     var lastTime = 0L
+    val TYPE_USER = 1
+    val TYPE_REPO = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,37 +62,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun hideProgressBar(pb : ProgressBar){
-        if (etInput.text.toString().length == EMPTY){
+    fun hideProgressBar(pb: ProgressBar) {
+        if (etInput.text.toString().length == EMPTY) {
             pb.visibility = View.GONE
         }
     }
 
-    fun searchForResults(rv: RecyclerView, tv : TextView, pb : ProgressBar) {
-        if (lastInputWasSecondAgo() && etInput.text.toString().length > 3){
+    fun searchForResults(rv: RecyclerView, tv: TextView, pb: ProgressBar) {
+        if (lastInputWasSecondAgo() && etInput.text.toString().length > 3) {
             loadReposAndNames(rv, etInput.text.toString(), tv, pb)
         }
         lastTime = System.currentTimeMillis()
 
     }
 
-    fun lastInputWasSecondAgo() : Boolean{
-        return (System.currentTimeMillis() - lastTime > 1000)
+    fun lastInputWasSecondAgo(): Boolean {
+        return (System.currentTimeMillis() - lastTime > TWO_SECONDS)
     }
 
-    fun loadReposAndNames(rv: RecyclerView, input: String, textView : TextView, pb : ProgressBar) {
+    fun loadReposAndNames(rv: RecyclerView, input: String, textView: TextView, pb: ProgressBar) {
         allItems.clear()
         adapter.items.clear()
         adapter.notifyDataSetChanged()
         apiManager.repoNameObservable(input).mergeWith(apiManager.userLoginObservable(input))
-                .subscribe({allItems.add(it)
+                .subscribe({
+                    allItems.add(it)
                 }, {
-//                    Toast.makeText(this, "Api Error\n" + it.name.toString() , Toast.LENGTH_LONG).show()
+                    //                    Toast.makeText(this, "Api Error\n" + it.name.toString() , Toast.LENGTH_LONG).show()
 //                    Log.e(log, "ApiError: " + it.toString());
                 }, {
                     adapter.items.addAll(allItems)
-                    Collections.sort(adapter.items){
-                        item1, item2 -> Integer.valueOf(item1?.id) - Integer.valueOf(item2?.id)
+                    Collections.sort(adapter.items) { item1, item2 ->
+                        Integer.valueOf(item1?.id) - Integer.valueOf(item2?.id)
                     }
                     rv.adapter = adapter
                     adapter.notifyDataSetChanged()
@@ -110,12 +111,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CustomViewHolder {
-            return CustomViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item, parent, false))
+            when (viewType){
+                TYPE_USER -> return CustomViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_user, parent, false))
+                else -> {
+                    return CustomViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item, parent, false))
+                }
+            }
         }
 
         override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
             holder.tvName?.setText(items[position]?.name)
             holder.tvId?.setText(items[position]?.id)
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            if (items[position]?.isUser ?: true) {
+                return TYPE_USER
+            } else
+                return TYPE_REPO
         }
 
         inner class CustomViewHolder(v: View) : RecyclerView.ViewHolder(v) {
