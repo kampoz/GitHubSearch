@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     val log: String = "ApiLog  Http"
     var adapter = ResultsAdapter();
     var usersItems = mutableListOf<String?>()
+    var reposItems = mutableListOf<String?>()
+    var apiManager = ApiManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,25 +32,19 @@ class MainActivity : AppCompatActivity() {
 
         usersItems.add("PIerwszy")
         usersItems.add("Drugi")
-
         adapter.items.addAll(usersItems)
-
         rv.adapter = adapter
 
         btnSearch.setOnClickListener {
-            searchUsers(rv)
-//            search()
+//            searchUsers(rv)
+            searchRepos(rv)
         }
     }
 
 
-
-    fun searchUsers(rv : RecyclerView) {
-
+    fun searchUsers(rv: RecyclerView) {
         usersItems.clear()
         adapter.items.clear()
-
-        var apiManager = ApiManager()
         apiManager.userLoginObservable("kampoz")
                 .subscribe({
                     usersItems.add(it)
@@ -56,15 +52,27 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Error", Toast.LENGTH_LONG).show()
                     Log.e(log, "ApiError: " + it.toString());
                 }, {
-
                     adapter.items.addAll(usersItems)
                     rv.adapter = adapter
                     adapter.notifyDataSetChanged()
-//
                 })
     }
 
-
+    fun searchRepos(rv: RecyclerView) {
+        reposItems.clear()
+        adapter.items.clear()
+        apiManager.repoNameObservanle("tetris")
+                .subscribe({
+                    reposItems.add(it)
+                }, {
+                    Toast.makeText(this, "Error", Toast.LENGTH_LONG).show()
+                    Log.e(log, "ApiError: " + it.toString());
+                }, {
+                    adapter.items.addAll(reposItems)
+                    rv.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                })
+    }
 
     inner class ResultsAdapter : RecyclerView.Adapter<ResultsAdapter.CustomViewHolder>() {
 

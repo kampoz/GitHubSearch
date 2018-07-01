@@ -33,14 +33,24 @@ class ApiManager {
                 .build()
     }
 
-    fun userLoginObservable(name : String) : Observable<String>{
-        return gitHubApi.getUsersByName(name)
+    fun userLoginObservable(login : String) : Observable<String>{
+        return gitHubApi.getUsersByName(login)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map { userResponse -> userResponse.items }
                 .flatMapIterable { user -> user }
                 .map { user -> user.login }
+    }
+
+    fun repoNameObservanle(name : String) : Observable<String> {
+        return gitHubApi.getReposByName("tetris")
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map{repoResponse -> repoResponse.items}
+                .flatMapIterable { repo -> repo }
+                .map { repo -> repo.name }
     }
 
     companion object {
