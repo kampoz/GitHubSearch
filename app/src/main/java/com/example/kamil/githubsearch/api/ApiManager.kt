@@ -57,6 +57,14 @@ class ApiManager {
 
     }
 
+    fun userById(id : String?) : Observable<User> {
+        return gitHubApi.getSingleUser(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+
+
+    }
+
     companion object {
         val BASE_URL = "https://api.github.com/"
     }

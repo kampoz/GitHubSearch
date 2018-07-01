@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                     holder.llContainer.setOnClickListener { v ->
                         run {
                             Toast.makeText(baseContext, "User clicked!", Toast.LENGTH_LONG).show()
-                            addFragmentToContainer(UserFragment().newInstance("333"))
+                            addFragmentToContainer(UserFragment().newInstance(holder.tvName.text.toString()))
                         }
                     }
 

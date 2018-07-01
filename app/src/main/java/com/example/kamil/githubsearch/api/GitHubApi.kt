@@ -20,7 +20,7 @@ public interface GitHubApi {
     fun getUsersByName(@Query("q") userName: String) : Observable<UsersResponse>
 
     @GET("users/{user}")
-    fun getSingleUser(@Path("user") user : String) : Observable<User>
+    fun getSingleUser(@Path("user") user : String?) : Observable<User>
 
     @GET("users/{user}/starred")
     fun getStarredForUser(@Path("user") user : String) : Observable<ReposResponse>
