@@ -44,7 +44,7 @@ class ApiManager {
     }
 
     fun repoNameObservanle(name : String) : Observable<String> {
-        return gitHubApi.getReposByName("tetris")
+        return gitHubApi.getReposByName(name)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
