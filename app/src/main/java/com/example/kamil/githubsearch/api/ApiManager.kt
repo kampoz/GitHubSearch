@@ -1,5 +1,8 @@
 package com.example.kamil.githubsearch.api
 
+import com.example.kamil.githubsearch.model.Item
+import com.example.kamil.githubsearch.model.Repo
+import com.example.kamil.githubsearch.model.RepoUser
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -33,27 +36,44 @@ class ApiManager {
                 .build()
     }
 
-    fun userLoginObservable(login : String) : Observable<String>{
+    fun userLoginObservable(login : String) : Observable<Item>{
         return gitHubApi.getUsersByName(login)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map { userResponse -> userResponse.items }
                 .flatMapIterable { user -> user }
-                .map { user -> user.login }
+                .map { user -> userToItem(user) }
     }
 
-    fun repoNameObservanle(name : String) : Observable<String> {
+    fun repoNameObservable(name : String) : Observable<Item> {
         return gitHubApi.getReposByName(name)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map{repoResponse -> repoResponse.items}
                 .flatMapIterable { repo -> repo }
-                .map { repo -> repo.name }
+                .map { repo -> repoToItem(repo)}
+
     }
 
     companion object {
         val BASE_URL = "https://api.github.com/search/"
+    }
+
+    fun repoToItem(repo : Repo) : Item {
+        val item = Item()
+        item.id = repo.id
+        item.name = repo.name
+        return item
+
+    }
+
+    fun userToItem(user : RepoUser) : Item {
+        val item = Item()
+        item.id = user.id
+        item.name = user.login
+        return item
+
     }
 }
