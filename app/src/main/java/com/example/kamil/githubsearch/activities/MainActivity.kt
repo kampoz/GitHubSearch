@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.example.kamil.githubsearch.R
+import com.example.kamil.githubsearch.api.ApiManager
 import com.example.kamil.githubsearch.api.GitHubApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -54,22 +55,9 @@ class MainActivity : AppCompatActivity() {
 
         usersItems.clear()
         adapter.items.clear()
-
-        val okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
-
-        val httpLoggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        okHttpClientBuilder.addInterceptor(httpLoggingInterceptor)
-
-        val retrofit = Retrofit.Builder()
-                .baseUrl("https://api.github.com/search/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(okHttpClientBuilder.build())
-                .build()
-
-        val gitHubApi = retrofit.create(GitHubApi::class.java)
-        gitHubApi.getUsersByName("kampoz")
+        
+        var apiManager = ApiManager()
+        apiManager.gitHubApi.getUsersByName("kampoz")
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -89,6 +77,8 @@ class MainActivity : AppCompatActivity() {
 //
                 })
     }
+
+
 
     inner class ResultsAdapter : RecyclerView.Adapter<ResultsAdapter.CustomViewHolder>() {
 
