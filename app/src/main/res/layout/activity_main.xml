@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -11,20 +10,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/search_field_padding"
-    android:background="@color/gray">
+    android:background="@color/white">
 
     <EditText
       android:id="@+id/etInput"
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:layout_weight="1"
-      android:background="@color/white"/>
+      android:padding="@dimen/padding_5"
+      android:background="@color/white"
+      android:hint="@string/search_call"
+      android:textColorHint="@color/gray"/>
 
     <Button
       android:id="@+id/btnSearch"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/search"/>
+      android:text="@string/search" />
 
   </LinearLayout>
 
@@ -32,16 +34,19 @@
     android:id="@+id/tvResultsAmount"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Search results: 0"/>
+    android:text="@string/results_amount"
+    android:gravity="center_horizontal"
+    android:textSize="@dimen/text_size_20"
+    android:textStyle="italic"/>
 
   <android.support.v7.widget.RecyclerView
     android:id="@+id/rvResults"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    android:background="@color/colorAccent"
+    android:padding="@dimen/search_field_padding"
+    android:background="@color/gray"
     tools:layout_editor_absoluteX="8dp"
-    tools:layout_editor_absoluteY="8dp"
-    android:padding="@dimen/search_field_padding"/>
+    tools:layout_editor_absoluteY="8dp" />
 
 </LinearLayout>

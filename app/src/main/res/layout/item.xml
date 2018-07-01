@@ -8,8 +8,8 @@
     android:id="@+id/tvItemName"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/yellow"
+    android:background="@color/white"
     android:layout_margin="@dimen/margin_2"
-    android:padding="@dimen/padding_5"
+    android:padding="@dimen/padding_10"
     android:text="N/A" />
 </LinearLayout>

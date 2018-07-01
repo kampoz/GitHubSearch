@@ -23,34 +23,22 @@ class MainActivity : AppCompatActivity() {
 
     val log: String = "ApiLog  Http"
     var adapter = ResultsAdapter();
-    //    var usersItems = mutableListOf<String?>()
-//    var reposItems = mutableListOf<String?>()
     var allItems = mutableListOf<String?>()
     var apiManager = ApiManager()
+    val EMPTY = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val rv = findViewById<RecyclerView>(R.id.rvResults)
+        val tv = findViewById<TextView>(R.id.tvResultsAmount)
+        tv.setText(getString(R.string.results_amount, EMPTY.toString()))
         rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
         rv.adapter = adapter
 
         etInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                var timer = Timer()
-                val DELAY: Long = 1000
-                timer.cancel()
-                timer = Timer()
-                timer.schedule(
-                        object : TimerTask() {
-                            override fun run() {
-                                this@MainActivity.runOnUiThread(java.lang.Runnable {
-                                    loadReposAndNames(rv, etInput.text.toString())
-                                })
-                            }
-                        },
-                        DELAY
-                )
+                searchForResults(rv, tv)
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -61,47 +49,32 @@ class MainActivity : AppCompatActivity() {
         })
 
         btnSearch.setOnClickListener {
-            //            searchUsers(rv)
-//            searchRepos(rv
-            loadReposAndNames(rv, etInput.text.toString())
+            searchForResults(rv, tv)
         }
     }
 
+    fun searchForResults(rv: RecyclerView, tv : TextView) {
+        if (etInput.text.toString().length > EMPTY){
+            var timer = Timer()
+            val DELAY: Long = 1000
+            timer.cancel()
+            timer = Timer()
+            timer.schedule(
+                    object : TimerTask() {
+                        override fun run() {
+                            this@MainActivity.runOnUiThread(java.lang.Runnable {
+                                loadReposAndNames(rv, etInput.text.toString(), tv)
 
-    //todo przekazac text do funkcji z et
-//    fun searchUsers(rv: RecyclerView) {
-//        usersItems.clear()
-//        adapter.items.clear()
-//        apiManager.userLoginObservable("kampoz")
-//                .subscribe({
-//                    usersItems.add(it)
-//                }, {
-//                    Toast.makeText(this, "Error", Toast.LENGTH_LONG).show()
-//                    Log.e(log, "ApiError: " + it.toString());
-//                }, {
-//                    adapter.items.addAll(usersItems)
-//                    rv.adapter = adapter
-//                    adapter.notifyDataSetChanged()
-//                })
-//    }
-//
-//    fun searchRepos(rv: RecyclerView) {
-//        reposItems.clear()
-//        adapter.items.clear()
-//        apiManager.repoNameObservanle("tetris")
-//                .subscribe({
-//                    reposItems.add(it)
-//                }, {
-//                    Toast.makeText(this, "Error", Toast.LENGTH_LONG).show()
-//                    Log.e(log, "ApiError: " + it.toString());
-//                }, {
-//                    adapter.items.addAll(reposItems)
-//                    rv.adapter = adapter
-//                    adapter.notifyDataSetChanged()
-//                })
-//    }
+                            })
+                        }
+                    },
+                    DELAY
+            )
+        }
 
-    fun loadReposAndNames(rv: RecyclerView, input: String) {
+    }
+
+    fun loadReposAndNames(rv: RecyclerView, input: String, textView : TextView) {
         allItems.clear()
         adapter.items.clear()
         adapter.notifyDataSetChanged()
@@ -115,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                     adapter.items.addAll(allItems)
                     rv.adapter = adapter
                     adapter.notifyDataSetChanged()
+                    textView.setText(getString(R.string.results_amount, allItems.size.toString()))
                 })
     }
 

@@ -1,4 +1,6 @@
 <resources>
   <string name="app_name">GitHubSearch</string>
   <string name="search">Search</string>
+  <string name="search_call">Search for repos and users</string>
+  <string name="results_amount">Results amount: %s</string>
 </resources>
