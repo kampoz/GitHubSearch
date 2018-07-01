@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     var adapter = ResultsAdapter();
     var usersItems = mutableListOf<String?>()
     var reposItems = mutableListOf<String?>()
+    var allItems = mutableListOf<String?>()
     var apiManager = ApiManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,11 +38,13 @@ class MainActivity : AppCompatActivity() {
 
         btnSearch.setOnClickListener {
 //            searchUsers(rv)
-            searchRepos(rv)
+//            searchRepos(rv
+            loadReposAndNames(rv)
         }
     }
 
 
+    //todo przekazac text do funkcji z et
     fun searchUsers(rv: RecyclerView) {
         usersItems.clear()
         adapter.items.clear()
@@ -69,6 +72,20 @@ class MainActivity : AppCompatActivity() {
                     Log.e(log, "ApiError: " + it.toString());
                 }, {
                     adapter.items.addAll(reposItems)
+                    rv.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                })
+    }
+
+    fun loadReposAndNames(rv: RecyclerView){
+        apiManager.repoNameObservanle("tetris").mergeWith(apiManager.userLoginObservable("kampoz"))
+                .subscribe({
+                    allItems.add(it)
+                }, {
+                    Toast.makeText(this, "Error", Toast.LENGTH_LONG).show()
+                    Log.e(log, "ApiError: " + it.toString());
+                }, {
+                    adapter.items.addAll(allItems)
                     rv.adapter = adapter
                     adapter.notifyDataSetChanged()
                 })
