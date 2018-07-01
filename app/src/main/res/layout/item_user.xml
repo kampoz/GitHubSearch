@@ -5,7 +5,14 @@
   android:layout_height="wrap_content"
   android:background="@color/yellow"
   android:padding="@dimen/padding_10"
-  android:orientation="vertical">
+  >
+
+  <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
 
   <TextView
     android:id="@+id/tvItemName"
@@ -17,5 +24,15 @@
     android:id="@+id/tvId"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" />
+
+  </LinearLayout>
+
+  <TextView
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:text="USER"
+    android:gravity="center_vertical|right"
+    android:layout_marginEnd="@dimen/margin_20"/>
 
 </LinearLayout>

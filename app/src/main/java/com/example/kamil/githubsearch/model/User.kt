@@ -6,4 +6,7 @@ package com.example.kamil.githubsearch.model
 class User {
     var id: String? = null
     var login: String? = null
+    var avatar_url: String? = null
+    var starred_url: String? = null
+    var followers: Integer? = null
 }

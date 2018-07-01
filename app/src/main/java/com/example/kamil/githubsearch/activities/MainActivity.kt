@@ -1,6 +1,7 @@
 package com.example.kamil.githubsearch.activities
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -15,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.kamil.githubsearch.R
 import com.example.kamil.githubsearch.api.ApiManager
+import com.example.kamil.githubsearch.fragment.UserFragment
 import com.example.kamil.githubsearch.model.Item
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun searchForResults(rv: RecyclerView, tv: TextView, pb: ProgressBar) {
-        if (lastInputWasSecondAgo() && etInput.text.toString().length > 3) {
+        if (lastInputWasSecondAgo() && etInput.text.toString().length > 4) {
             loadReposAndNames(rv, etInput.text.toString(), tv, pb)
         }
         lastTime = System.currentTimeMillis()
@@ -78,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun lastInputWasSecondAgo(): Boolean {
-        return (System.currentTimeMillis() - lastTime > SECOND)
+        return (System.currentTimeMillis() - lastTime > 500)
     }
 
     fun loadReposAndNames(rv: RecyclerView, input: String, textView: TextView, pb: ProgressBar) {
@@ -111,10 +113,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CustomViewHolder {
-            when (viewType){
+            when (viewType) {
                 TYPE_USER -> {
                     val holder = CustomViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_user, parent, false))
-                    holder.llContainer.setOnClickListener { v -> Toast.makeText(baseContext, "User clicked!",Toast.LENGTH_LONG).show()}
+                    holder.llContainer.setOnClickListener { v ->
+                        run {
+                            Toast.makeText(baseContext, "User clicked!", Toast.LENGTH_LONG).show()
+                            addFragmentToContainer(UserFragment().newInstance("333"))
+                        }
+                    }
+
                     return holder
                 }
                 else -> {
@@ -143,5 +151,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun addFragmentToContainer(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+                .add(R.id.fl_container, fragment)
+                .addToBackStack(null)
+                .commit()
+    }
 }
 

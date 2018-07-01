@@ -58,7 +58,7 @@ class ApiManager {
     }
 
     companion object {
-        val BASE_URL = "https://api.github.com/search/"
+        val BASE_URL = "https://api.github.com/"
     }
 
     fun repoToItem(repo : Repo) : Item {
