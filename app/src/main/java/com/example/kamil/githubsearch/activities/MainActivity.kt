@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import com.example.kamil.githubsearch.R
 import com.example.kamil.githubsearch.api.ApiManager
 import com.example.kamil.githubsearch.model.Item
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun lastInputWasSecondAgo(): Boolean {
-        return (System.currentTimeMillis() - lastTime > TWO_SECONDS)
+        return (System.currentTimeMillis() - lastTime > SECOND)
     }
 
     fun loadReposAndNames(rv: RecyclerView, input: String, textView: TextView, pb: ProgressBar) {
@@ -88,8 +89,7 @@ class MainActivity : AppCompatActivity() {
                 .subscribe({
                     allItems.add(it)
                 }, {
-                    //                    Toast.makeText(this, "Api Error\n" + it.name.toString() , Toast.LENGTH_LONG).show()
-//                    Log.e(log, "ApiError: " + it.toString());
+
                 }, {
                     adapter.items.addAll(allItems)
                     Collections.sort(adapter.items) { item1, item2 ->
@@ -112,9 +112,13 @@ class MainActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CustomViewHolder {
             when (viewType){
-                TYPE_USER -> return CustomViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_user, parent, false))
+                TYPE_USER -> {
+                    val holder = CustomViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_user, parent, false))
+                    holder.llContainer.setOnClickListener { v -> Toast.makeText(baseContext, "User clicked!",Toast.LENGTH_LONG).show()}
+                    return holder
+                }
                 else -> {
-                    return CustomViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item, parent, false))
+                    return CustomViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_repo, parent, false))
                 }
             }
         }
@@ -134,6 +138,7 @@ class MainActivity : AppCompatActivity() {
         inner class CustomViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             val tvName = v.findViewById<TextView>(R.id.tvItemName)
             val tvId = v.findViewById<TextView>(R.id.tvId)
+            val llContainer = v.findViewById<LinearLayout>(R.id.llContainer)
 
         }
     }
