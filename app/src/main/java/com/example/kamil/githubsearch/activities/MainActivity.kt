@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import com.example.kamil.githubsearch.R
@@ -26,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     var allItems = mutableListOf<String?>()
     var apiManager = ApiManager()
     val EMPTY = 0
+    val SECOND = 1000L
+    val TWO_SECONDS = 2000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +36,14 @@ class MainActivity : AppCompatActivity() {
         val rv = findViewById<RecyclerView>(R.id.rvResults)
         val tv = findViewById<TextView>(R.id.tvResultsAmount)
         tv.setText(getString(R.string.results_amount, EMPTY.toString()))
+        val pb = findViewById<ProgressBar>(R.id.pb_progress_bar)
         rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
         rv.adapter = adapter
 
         etInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                searchForResults(rv, tv)
+                searchForResults(rv, tv, pb)
+                hideProgressBar(pb)
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -49,21 +54,28 @@ class MainActivity : AppCompatActivity() {
         })
 
         btnSearch.setOnClickListener {
-            searchForResults(rv, tv)
+            searchForResults(rv, tv, pb)
         }
     }
 
-    fun searchForResults(rv: RecyclerView, tv : TextView) {
+    fun hideProgressBar(pb : ProgressBar){
+        if (etInput.text.toString().length == EMPTY){
+            pb.visibility = View.GONE
+        }
+    }
+
+    fun searchForResults(rv: RecyclerView, tv : TextView, pb : ProgressBar) {
         if (etInput.text.toString().length > EMPTY){
+            pb.visibility = View.VISIBLE
             var timer = Timer()
-            val DELAY: Long = 1000
+            val DELAY: Long = TWO_SECONDS
             timer.cancel()
             timer = Timer()
             timer.schedule(
                     object : TimerTask() {
                         override fun run() {
                             this@MainActivity.runOnUiThread(java.lang.Runnable {
-                                loadReposAndNames(rv, etInput.text.toString(), tv)
+                                loadReposAndNames(rv, etInput.text.toString(), tv, pb)
 
                             })
                         }
@@ -74,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun loadReposAndNames(rv: RecyclerView, input: String, textView : TextView) {
+    fun loadReposAndNames(rv: RecyclerView, input: String, textView : TextView, pb : ProgressBar) {
         allItems.clear()
         adapter.items.clear()
         adapter.notifyDataSetChanged()
@@ -82,13 +94,14 @@ class MainActivity : AppCompatActivity() {
                 .subscribe({
                     allItems.add(it)
                 }, {
-                    Toast.makeText(this, "Error", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Api Error\n" + it.toString() , Toast.LENGTH_LONG).show()
                     Log.e(log, "ApiError: " + it.toString());
                 }, {
                     adapter.items.addAll(allItems)
                     rv.adapter = adapter
                     adapter.notifyDataSetChanged()
                     textView.setText(getString(R.string.results_amount, allItems.size.toString()))
+                    pb.visibility = View.GONE
                 })
     }
 
