@@ -59,10 +59,6 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
-
-        btnSearch.setOnClickListener {
-            searchForResults(rv, tv, pb)
-        }
     }
 
     fun hideProgressBar(pb: ProgressBar) {
@@ -72,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun searchForResults(rv: RecyclerView, tv: TextView, pb: ProgressBar) {
-        if (lastInputWasSecondAgo() && etInput.text.toString().length > 4) {
+        if (lastInputWasSecondAgo() && etInput.text.toString().length > 2) {
             loadReposAndNames(rv, etInput.text.toString(), tv, pb)
         }
         lastTime = System.currentTimeMillis()

@@ -5,4 +5,7 @@
   <string name="results_amount">Results amount: %s</string>
   <string name="starred_number">Starred number: %s</string>
   <string name="followers_number">Followers: %s</string>
+  <string name="repo">REPO</string>
+  <string name="user">USER</string>
+
 </resources>
