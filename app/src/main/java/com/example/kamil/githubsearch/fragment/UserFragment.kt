@@ -49,7 +49,7 @@ class UserFragment : Fragment() {
                     tvUsersName.setText(user?.login)
                     tvFollowers.setText(getString(R.string.followers_number, user?.followers.toString()))
                     Picasso.get()
-                            .load("https://avatars1.githubusercontent.com/u/25583667?v=4")
+                            .load(user?.avatar_url)
                             .placeholder(R.drawable.ic_launcher_foreground)
                             .error(R.drawable.ic_launcher_foreground)
                             .into(ivAvatar);

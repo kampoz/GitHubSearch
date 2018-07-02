@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
     val log: String = "ApiLog  Http"
     var adapter = ResultsAdapter();
-    //    var allItems = mutableListOf<String?>()
     var allItems = mutableSetOf<Item?>()
     var apiManager = ApiManager()
     val EMPTY = 0
@@ -35,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     var lastTime = 0L
     val TYPE_USER = 1
     val TYPE_REPO = 2
+    val DELAY = 300
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun lastInputWasSecondAgo(): Boolean {
-        return (System.currentTimeMillis() - lastTime > 500)
+        return (System.currentTimeMillis() - lastTime > DELAY)
     }
 
     fun loadReposAndNames(rv: RecyclerView, input: String, textView: TextView, pb: ProgressBar) {
