@@ -22,18 +22,23 @@
       android:text="username"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:textSize="@dimen/text_size_30"
+      android:textStyle="bold"
       android:layout_marginTop="@dimen/margin_20"/>
 
     <TextView
       android:id="@+id/tvStartNumber"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:textSize="@dimen/text_size_20"
       android:layout_marginTop="@dimen/margin_20"/>
 
     <TextView
       android:id="@+id/tvFollowers"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:textSize="@dimen/text_size_20"
+      android:textColor="@color/colorAccent"
       android:layout_marginTop="@dimen/margin_20"/>
   </LinearLayout>
 

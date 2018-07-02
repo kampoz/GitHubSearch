@@ -1,5 +1,6 @@
 package com.example.kamil.githubsearch.api
 
+import com.example.kamil.githubsearch.model.Repo
 import com.example.kamil.githubsearch.model.ReposResponse
 import com.example.kamil.githubsearch.model.User
 import com.example.kamil.githubsearch.model.UsersResponse
@@ -23,5 +24,5 @@ public interface GitHubApi {
     fun getSingleUser(@Path("user") user : String?) : Observable<User>
 
     @GET("users/{user}/starred")
-    fun getStarredForUser(@Path("user") user : String) : Observable<ReposResponse>
+    fun getUsersStars(@Path("user") user : String?) : Observable<List<Repo>>
 }

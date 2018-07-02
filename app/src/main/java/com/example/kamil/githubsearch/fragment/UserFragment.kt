@@ -10,8 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.kamil.githubsearch.R
 import com.example.kamil.githubsearch.api.ApiManager
+import com.example.kamil.githubsearch.model.Repo
 import com.example.kamil.githubsearch.model.User
-
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_user.*
 
 /**
  * A simple [Fragment] subclass.
@@ -19,13 +21,15 @@ import com.example.kamil.githubsearch.model.User
 class UserFragment : Fragment() {
 
     var user: User? = null
-    var id: String? = null
+    var login: String? = null
     var apiManager = ApiManager()
+    var arrayList = ArrayList<Repo>()
+//    var ivAvatar: ImageView? = null
 //    var tvUsersName : TextView? = null
 
-    fun newInstance(userId: String): UserFragment {
+    fun newInstance(userLogin: String): UserFragment {
         val fragment = UserFragment()
-        fragment.id = userId
+        fragment.login = userLogin
         return fragment
     }
 
@@ -35,20 +39,27 @@ class UserFragment : Fragment() {
 
         val ivAvatar = view.findViewById<ImageView>(R.id.ivAvatar)
         var tvUsersName = view.findViewById<TextView>(R.id.tvUserName)
-        val ivStartNumber = view.findViewById<TextView>(R.id.tvStartNumber)
+        val ivStarsNumber = view.findViewById<TextView>(R.id.tvStartNumber)
         val tvFollowers = view.findViewById<TextView>(R.id.tvFollowers)
 
-        // Inflate the layout for this fragment
-        apiManager.userById(id).subscribe({ user -> this.user = user
-
-
-        }, {}, {
-            val str : String? = user?.login
-            tvUsersName.setText(str)
+        apiManager.userByLogin(login)
+                .subscribe({ user ->
+                    this.user = user
+                }, {}, {
+                    tvUsersName.setText(user?.login)
+                    tvFollowers.setText(getString(R.string.followers_number, user?.followers.toString()))
+                    Picasso.get()
+                            .load("https://avatars1.githubusercontent.com/u/25583667?v=4")
+                            .placeholder(R.drawable.ic_launcher_foreground)
+                            .error(R.drawable.ic_launcher_foreground)
+                            .into(ivAvatar);
+                })
+        apiManager.getUsersStars(login).subscribe({
+            tvStartNumber.setText(getString(R.string.starred_number, it.size.toString()))
         })
 
         return view
+
+
     }
-
-
-}// Required empty public constructor
+}

@@ -2,6 +2,7 @@ package com.example.kamil.githubsearch.api
 
 import com.example.kamil.githubsearch.model.Item
 import com.example.kamil.githubsearch.model.Repo
+import com.example.kamil.githubsearch.model.ReposResponse
 import com.example.kamil.githubsearch.model.User
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -57,12 +58,16 @@ class ApiManager {
 
     }
 
-    fun userById(id : String?) : Observable<User> {
-        return gitHubApi.getSingleUser(id)
+    fun userByLogin(login : String?) : Observable<User> {
+        return gitHubApi.getSingleUser(login)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+    }
 
-
+    fun getUsersStars(login : String?) : Observable<List<Repo>> {
+        return gitHubApi.getUsersStars(login)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
     companion object {
